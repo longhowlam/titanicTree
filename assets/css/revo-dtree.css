@@ -1,0 +1,310 @@
+/* -- Misc ------------------------------------------------------------------ */
+
+body {
+	font-family: "Helvetica Neue", Helvetica;
+  color: #333333;  
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* important */
+table {
+	font-size: 12px;
+	color: #ffffff;
+}
+
+.tree-label {
+	padding 5px;
+	background-color: #fff;
+	opacity:0.9!important;
+}
+
+.sticky {
+	position:fixed;
+	top:60px;
+}
+
+/* -- SVG ------------------------------------------------------------------- */
+
+.revo-dtree .node rect {
+  cursor: pointer;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+ 
+.revo-dtree .node text {
+	font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+}
+ 
+.revo-dtree path.link {
+  fill: none;
+  stroke: lightgray;
+}
+
+/* -- Shapes ---------------------------------------------------------------- */
+
+.revo-dtree .shape {
+	width:20px;
+	height:20px;
+	border: 1px solid #CCCCCC;
+}
+
+.revo-dtree .square {
+	display:inline-block;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+}
+
+.revo-dtree .circle {
+	-moz-border-radius:50px;
+	-webkit-border-radius:50px;
+	border-radius:50px;
+}
+
+/* -- Tooltip --------------------------------------------------------------- */
+
+.revo-dtree .tip {
+	font-size:12px;
+	opacity:0.9!important;
+	position:absolute;
+	z-index:100000;
+	padding:5px;
+}
+
+.revo-dtree .tip-hd {
+	border-bottom:1px solid rgba(255,255,255,.5);
+}
+
+.revo-dtree .tip-ft {
+	border-top:1px solid rgba(255,255,255,.5);
+}
+
+.revo-dtree .tip-bd {
+	height:50px;
+	margin:5px;
+}
+
+.revo-dtree .tip-inner {
+	background-color:#001528;
+	color:#FFF;
+	max-width:200px;
+	overflow:hidden;
+	text-align:center;
+	width:200px;
+	border-radius:3px 3px 3px 3px;
+	box-shadow:0 1px 2px #000;
+	padding:5px 8px 4px;
+}
+
+.revo-dtree .tip-arrow {
+	border:5px dashed #001528;
+	height:0;
+	line-height:0;
+	position:absolute;
+	width:0;
+}
+
+.revo-dtree .tip-arrow-n {
+	border-bottom-color:#001528;
+}
+
+.revo-dtree .tip-arrow-s {
+	border-top-color:#001528;
+}
+
+.revo-dtree .tip-nw .tip-arrow {
+	border-bottom-style:solid;
+	border-left-color:transparent;
+	border-right-color:transparent;
+	border-top:0 none;
+	left:10px;
+	top:0;
+}
+
+.revo-dtree .tip-ne .tip-arrow {
+	border-bottom-style:solid;
+	border-left-color:transparent;
+	border-right-color:transparent;
+	border-top:0 none;
+	right:10px;
+	top:0;
+}
+
+.revo-dtree .tip-sw .tip-arrow {
+	border-bottom:0 none;
+	border-left-color:transparent;
+	border-right-color:transparent;
+	border-top-style:solid;
+	bottom:0;
+	left:10px;
+}
+
+.revo-dtree .tip-se .tip-arrow {
+	border-bottom:0 none;
+	border-left-color:transparent;
+	border-right-color:transparent;
+	border-top-style:solid;
+	bottom:0;
+	right:10px;
+}
+
+.revo-dtree .tip table td:first-child {
+	text-align:right;
+	padding-right:5px;
+}
+
+.revo-dtree .tip table td:last-child {
+	text-align:left;
+	padding-left:5px;
+}
+
+.revo-dtree .tip table {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.revo-dtree .tip table tr {
+	line-height:14px;
+}
+
+/* -- Base Legend ----------------------------------------------------------- */
+
+.revo-dtree .legend-container .indvars-container {
+	margin-top:0;
+	width:200px;
+}
+
+.revo-dtree .legend-container .dep-legend {
+	margin-left:41px;        
+	width:159px;
+} 
+
+.revo-dtree .indvars-container {
+	max-height:500px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding-bottom:10px;
+	padding-top:10px;
+}
+
+.revo-dtree .legend-container {
+	width: 200px;
+}
+
+.revo-dtree .legend-container ul {
+	list-style-type:none;
+	margin:0;
+	padding: 0;
+}
+
+.revo-dtree .legend-container ul li {
+	margin-bottom:5px;
+	margin-left:15px;
+}
+
+.revo-dtree .legend-collapse, .revo-dtree .legend-expand {
+	display:inline-block;
+	font-size:20px;
+	font-weight:700;
+	line-height:20px;
+	color:#000;
+	text-shadow:0 1px 0 #fff;
+	opacity:0.2;
+	cursor:pointer;
+	width:10px;
+}
+
+.revo-dtree .legend-collapse:hover, .revo-dtree .legend-expand:hover {
+	opacity:0.4;
+	filter:alpha(opacity=40);
+}
+
+/* -- Legend Gradient Plot and Axis ----------------------------------------- */
+
+.revo-dtree .gradient {
+	font-family:sans-serif;
+	font-size:11px;
+}
+
+.revo-dtree .gradient .plot {
+	height: 25px;
+}
+
+.revo-dtree .gradient .axis {
+	border:1px solid #333;
+	border-bottom:none;
+	height:4px;
+	margin:4px 4px 0;
+}
+
+.revo-dtree .gradient .axis-value .left {
+	float:left;
+	margin-left:2px;
+}
+
+.revo-dtree .gradient .axis-value .right {
+	float:right;	
+}
+
+/* -- Predicted Path -------------------------------------------------------- */
+
+.revo-dtree .split-info {
+	padding-left:30px;
+	white-space: nowrap;
+	width: 170px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #5B5B5B;
+}
+
+.revo-dtree .path-title {
+	font-weight: bold;
+	text-align: center;
+	margin: 0 30px 10px 0;
+}
+
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
+
+/* main view */
+
+.label-length {
+	height: auto !important;
+	width: 30px;
+}
+
+.indent {
+	margin-left: 20px;
+}
+
+.dms {
+	margin-top: 50px;
+}
+
+.revo-dtree .dropdown-menu {
+	width:230px;
+}
+
+.revo-dtree .dropdown-menu span {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.revo-dtree .dropdown-menu code {
+	font-size:9px;
+	margin-right: 10px;
+	padding:1px 2px;
+}
+
+.revo-dtree .dropdown-menu.layers {
+	padding:10px;
+	width:312px;
+}
+
+.revo-dtree .container-dtree {
+	margin-top:50px;
+}

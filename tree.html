@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Microsoft Corporation</title>
+      <meta name="description" content="Decision Tree">
+      <meta name="author" content="Microsoft Corporation">
+      <meta http-equiv="X-UA-Compatible" content="IE=10">
+      <!-- styles -->
+      <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="assets/css/revo-dtree.min.css" rel="stylesheet">
+   </head>
+   <body class="revo-dtree">
+      <!-- Tool tip -->
+      <script type="text/html" id="regression-tip">
+         <div class="tip tip-<%= pD.pos %>">
+           <div class="tip-arrow tip-arrow-<%= pD.arrow %>"></div>
+           <div class="tip-inner">
+             <div class="tip-hd"><strong><%= pD.label %></strong></div>
+             <div class="tip-bd">
+               <table>
+                <body>
+                 <tr><td>n</td><td> = </td><td><%=  pD.n %></td></tr>
+                 <tr><td>dev</td><td> = </td><td><%= pD.deviance %></td></tr>
+                 <tr><td>pred</td><td> = </td><td><%= pD.yval %></td></tr>
+                 </body>
+               </table>
+             </div>
+             <div class="tip-ft">
+               <strong> <%= pD.type === 'leaf' ? 'terminal node' : 'SPLIT &#183; ' + pD.splitVar %></strong>
+             </div>
+           </div>
+         </div>         
+      </script>
+      <script type="text/html" id="classification-tip">
+         <div class="tip tip-<%= pD.pos %>">
+           <div class="tip-arrow tip-arrow-<%= pD.arrow %>"></div>
+           <div class="tip-inner">
+             <div class="tip-hd"><strong><%= pD.label %></strong></div>
+             <div class="tip-bd">
+               <span>n = <%=n=pD.n %>, loss = <%=pD.loss %>, pred = <%= pD.yval%></span>
+               <div id="surface" style="opacity:1;"></div>
+             </div>
+             <div class="tip-ft">
+               <strong> <%= pD.type === 'leaf' ? 'terminal node' : 'SPLIT &#183; ' + pD.splitVar %></strong>
+             </div>
+           </div>
+         </div>         
+      </script>
+      <script type="text/html" id="regression-legend">
+         <div class="legend-container">
+           <div class="sticky">              
+              <div id="legend-toggle" class="legend-expand">-</div>
+              <div class="shape square" style="background:<%= range[1] %>">
+                 <div class="split-info"><%= legend.rule.depVars.name %></div>
+              </div>              
+              <div id="dep-legend" class="dep-legend gradient">
+                <div class="plot" id="gradient"></div>
+                <div class="axis"></div>
+                <div class="axis-value">
+                    <span class="left">0</span>
+                    <span class="right"><%=d3.round(legend.rule.depVars.maxyval, 1)%></span>
+                </div>
+              </div>
+              <div class="indvars-container">
+                <ul id="legend-vars"></ul>
+              </div>
+           </div>
+         </div>  
+      </script>
+      <script type="text/html" id="classification-legend">
+         <div class="legend-container">
+           <div class="sticky">
+              <div>
+                <div id="legend-toggle" class="legend-expand">-</div>
+                <div class="shape square" style="background:<%= range[1] %>">
+                  <div class="split-info"><%= legend.rule.depVars.name %></div>
+                </div>
+              </div>
+              <div id="dep-legend" class="dep-legend">
+                <ul></ul>                
+              </div>
+              <div class="indvars-container">
+                <ul id="legend-vars"></ul>
+              </div>
+           </div>
+         </div>  
+      </script>
+      <script type="text/html" id="pred-path">
+         <div class="legend-container">
+           <div class="sticky">
+              <div class="indvars-container">
+                <p class="path-title">Predicting <%= variable %> </p>
+                <ul id="pred-path-list"></ul>
+              </div>
+           </div>
+         </div>
+      </script>
+
+      <!-- Navbar
+         ================================================== -->
+      <div class="navbar navbar-fixed-top">
+         <div class="navbar-inner">
+            <div class="container-fluid">
+               <a class="brand" href="#">RevoTreeView</a>
+               <ul class="nav pull-right">
+                  <li class="dropdown">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench"></i> Options <b class="caret"></b></a>
+                     <ul id="layers-dropdown" class="dropdown-menu layers">
+                       <div>
+                        <label class="checkbox">
+                          <input class="checkbox-filter-layers" data-layer="border" type="checkbox" checked>
+                          Show variability using border thickness
+                        </label>                  
+                        <label class="checkbox">
+                          <input class="checkbox-filter-layers" data-layer="label" type="checkbox" checked>
+                          Show split and predicted values on node label
+                        </label>
+                        <label class="indent">
+                          Truncate labels: <input type="text" class="label-length" data-layer="truncate">
+                        </label>
+                        <label class="checkbox">
+                          <input class="checkbox-filter-layers" data-layer="color" type="checkbox" checked>
+                          Use node color to identify variables
+                        </label> 
+                        <label class="checkbox">
+                          <input class="checkbox-filter-layers" data-layer="legend" type="checkbox" checked>
+                          Display legend area
+                        </label>
+                        <ul class="inline">                                
+                          <li>
+                            <label class="radio indent">
+                              <input type="radio" name="var-display" data-layer="legcolor" value="3" checked>
+                              Show color legend
+                            </label>
+                          </li>
+                          <li>
+                            <label class="radio indent">
+                              <input type="radio" name="var-display" data-layer="path" value="4">
+                              Show prediction path
+                            </label>
+                          </li>
+                        </ul>
+                      </div>                      
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                        <li><a href="assets/help/help.html" target="_blank"><i class="icon-share-alt"></i> Open Help</a></li>
+                        <li class="divider"></li>
+                        <li class="nav-header">Hints</li>
+                        <li><span><code>Click      </code>Expand / Collapse</span></li>
+                        <li><span><code>CTRL + Click</code>Expand 1 level</span></li>
+                        <li><span><code>ALT + Click </code> Expand all levels</span></li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+
+      <!-- Container
+         ================================================== -->
+      <div class="container-fluid container-dtree">
+       <div class="row-fluid">
+        <!-- Error Essage -->
+        <div id="dms" class="dms hide"></div>
+        <div id="legend-container" class="pull-right">
+          <div id="legend"></div>
+          <div id="path" class="hide"></div>
+        </div>
+        <div id="tree"></div>                
+      </div>
+    </div>
+   </body>
+
+   <!-- javascript -->
+   <script src="assets/vendor/jquery/js/jquery.min.js"></script>
+   <script src="assets/vendor/bootstrap/js/bootstrap-dropdown.js"></script>
+   <script src="assets/vendor/d3/js/d3.min.js"></script>
+   <script src="assets/js/revo-dtree.js"></script>
+   <script type="text/javascript">
+      (function(context) {
+        try {
+          var data = {"method":"anova","summary": {"minn":10,"maxn": 891,"mindev":0,"maxdev": 210.727272727273},"legend": {"depVars": {"name": "Survived","minyval":0,"maxyval": 1},"indVars": ["Age","Fare","Sex"]},"label":"root","n":891,"deviance":210.7273000,"yval":0.38383840,"splitVar":"Sex","splitVal":"multiple","type":"split","children": [{"label":"Sex=male","n":577,"deviance": 88.4090100,"yval":0.18890810,"splitVar":"Age","splitVal":"6.5","type":"split","children": [{"label":"Age>=6.5","n":553,"deviance": 77.3598600,"yval":0.16817360,"splitVar":"Fare","splitVal":" 25.5","type":"split","children": [{"label":"Fare< 25.5","n":387,"deviance": 38.2222200,"yval":0.11111110,"splitVar":"Age","splitVal":"16.5","type":"split","children": [{"label":"Age>=16.5","n":374,"deviance": 34.9331600,"yval":0.10427810,"splitVar":"Age","splitVal":"32.5","type":"split","children": [{"label":"Age>=32.5","n":94,"deviance":  5.6170210,"yval":0.06382979,"splitVar":"Age","splitVal":" 38.5","type":"split","children": [{"label":"Age< 38.5","n":38,"deviance":  0.9736842,"yval":0.02631579,"splitVar":"Fare","splitVal":" 12.5","type":"split","children": [{"label":"Fare< 12.5","n":28,"deviance":  0.0000000,"yval":0.00000000,"type":"leaf"},{"label":"Fare>=12.5","n":10,"deviance":  0.9000000,"yval":0.10000000,"type":"leaf"}]},{"label":"Age>=38.5","n":56,"deviance":  4.5535710,"yval":0.08928571,"splitVar":"Age","splitVal":"45.25","type":"split","children": [{"label":"Age>=45.25","n":28,"deviance":  0.9642857,"yval":0.03571429,"type":"leaf"},{"label":"Age< 45.25","n":28,"deviance":  3.4285710,"yval":0.14285710,"type":"leaf"}]}]},{"label":"Age< 32.5","n":280,"deviance": 29.1107100,"yval":0.11785710,"splitVar":"Age","splitVal":" 30.75","type":"split","children": [{"label":"Age< 30.75","n":265,"deviance": 25.0415100,"yval":0.10566040,"splitVar":"Age","splitVal":" 26.5","type":"split","children": [{"label":"Age< 26.5","n":220,"deviance": 18.9954500,"yval":0.09545455,"splitVar":"Fare","splitVal":" 14.5","type":"split","children": [{"label":"Fare< 14.5","n":194,"deviance": 14.6804100,"yval":0.08247423,"splitVar":"Age","splitVal":"20.25","type":"split","children": [{"label":"Age>=20.25","n":151,"deviance": 10.1986800,"yval":0.07284768,"splitVar":"Fare","splitVal":" 12","type":"split","children": [{"label":"Fare< 12","n":138,"deviance":  8.4130430,"yval":0.06521739,"type":"leaf"},{"label":"Fare>=12","n":13,"deviance":  1.6923080,"yval":0.15384620,"type":"leaf"}]},{"label":"Age< 20.25","n":43,"deviance":  4.4186050,"yval":0.11627910,"splitVar":"Age","splitVal":" 18.5","type":"split","children": [{"label":"Age< 18.5","n":16,"deviance":  0.9375000,"yval":0.06250000,"type":"leaf"},{"label":"Age>=18.5","n":27,"deviance":  3.4074070,"yval":0.14814810,"type":"leaf"}]}]},{"label":"Fare>=14.5","n":26,"deviance":  4.0384620,"yval":0.19230770,"type":"leaf"}]},{"label":"Age>=26.5","n":45,"deviance":  5.9111110,"yval":0.15555560,"splitVar":"Fare","splitVal":"9.5","type":"split","children": [{"label":"Fare>=9.5","n":17,"deviance":  0.0000000,"yval":0.00000000,"type":"leaf"},{"label":"Fare< 9.5","n":28,"deviance":  5.2500000,"yval":0.25000000,"type":"leaf"}]}]},{"label":"Age>=30.75","n":15,"deviance":  3.3333330,"yval":0.33333330,"type":"leaf"}]}]},{"label":"Age< 16.5","n":13,"deviance":  2.7692310,"yval":0.30769230,"type":"leaf"}]},{"label":"Fare>=25.5","n":166,"deviance": 34.9397600,"yval":0.30120480,"splitVar":"Age","splitVal":"53","type":"split","children": [{"label":"Age>=53","n":25,"deviance":  2.6400000,"yval":0.12000000,"type":"leaf"},{"label":"Age< 53","n":141,"deviance": 31.3333300,"yval":0.33333330,"splitVar":"Age","splitVal":" 24.5","type":"split","children": [{"label":"Age< 24.5","n":28,"deviance":  3.4285710,"yval":0.14285710,"type":"leaf"},{"label":"Age>=24.5","n":113,"deviance": 26.6371700,"yval":0.38053100,"splitVar":"Age","splitVal":"27.5","type":"split","children": [{"label":"Age>=27.5","n":102,"deviance": 23.2941200,"yval":0.35294120,"splitVar":"Age","splitVal":" 47.5","type":"split","children": [{"label":"Age< 47.5","n":89,"deviance": 19.1910100,"yval":0.31460670,"splitVar":"Age","splitVal":"42.5","type":"split","children": [{"label":"Age>=42.5","n":14,"deviance":  0.9285714,"yval":0.07142857,"type":"leaf"},{"label":"Age< 42.5","n":75,"deviance": 17.2800000,"yval":0.36000000,"splitVar":"Age","splitVal":" 31.5","type":"split","children": [{"label":"Age< 31.5","n":15,"deviance":  2.4000000,"yval":0.20000000,"type":"leaf"},{"label":"Age>=31.5","n":60,"deviance": 14.4000000,"yval":0.40000000,"splitVar":"Age","splitVal":"36.25","type":"split","children": [{"label":"Age>=36.25","n":16,"deviance":  3.4375000,"yval":0.31250000,"type":"leaf"},{"label":"Age< 36.25","n":44,"deviance": 10.7954500,"yval":0.43181820,"type":"leaf"}]}]}]},{"label":"Age>=47.5","n":13,"deviance":  3.0769230,"yval":0.61538460,"type":"leaf"}]},{"label":"Age< 27.5","n":11,"deviance":  2.5454550,"yval":0.63636360,"type":"leaf"}]}]}]}]},{"label":"Age< 6.5","n":24,"deviance":  5.3333330,"yval":0.66666670,"type":"leaf"}]},{"label":"Sex=female","n":314,"deviance": 60.1051000,"yval":0.74203820,"splitVar":"Fare","splitVal":" 47.5","type":"split","children": [{"label":"Fare< 47.5","n":225,"deviance": 50.3288900,"yval":0.66222220,"splitVar":"Age","splitVal":"36.5","type":"split","children": [{"label":"Age>=36.5","n":36,"deviance":  8.8888890,"yval":0.55555560,"splitVar":"Age","splitVal":" 47.5","type":"split","children": [{"label":"Age< 47.5","n":23,"deviance":  5.6521740,"yval":0.43478260,"type":"leaf"},{"label":"Age>=47.5","n":13,"deviance":  2.3076920,"yval":0.76923080,"type":"leaf"}]},{"label":"Age< 36.5","n":189,"deviance": 40.9523800,"yval":0.68253970,"splitVar":"Age","splitVal":" 32.25","type":"split","children": [{"label":"Age< 32.25","n":175,"deviance": 39.4285700,"yval":0.65714290,"splitVar":"Age","splitVal":"5.5","type":"split","children": [{"label":"Age>=5.5","n":155,"deviance": 35.7677400,"yval":0.63870970,"splitVar":"Age","splitVal":" 12","type":"split","children": [{"label":"Age< 12","n":11,"deviance":  2.1818180,"yval":0.27272730,"type":"leaf"},{"label":"Age>=12","n":144,"deviance": 32.0000000,"yval":0.66666670,"splitVar":"Fare","splitVal":" 25.5","type":"split","children": [{"label":"Fare< 25.5","n":123,"deviance": 28.5365900,"yval":0.63414630,"splitVar":"Fare","splitVal":"13.5","type":"split","children": [{"label":"Fare>=13.5","n":40,"deviance":  9.9750000,"yval":0.52500000,"splitVar":"Age","splitVal":"25","type":"split","children": [{"label":"Age>=25","n":11,"deviance":  2.5454550,"yval":0.36363640,"type":"leaf"},{"label":"Age< 25","n":29,"deviance":  7.0344830,"yval":0.58620690,"type":"leaf"}]},{"label":"Fare< 13.5","n":83,"deviance": 17.8554200,"yval":0.68674700,"splitVar":"Fare","splitVal":" 10.5","type":"split","children": [{"label":"Fare< 10.5","n":66,"deviance": 15.5303000,"yval":0.62121210,"splitVar":"Age","splitVal":"19.5","type":"split","children": [{"label":"Age>=19.5","n":51,"deviance": 12.5098000,"yval":0.56862750,"type":"leaf"},{"label":"Age< 19.5","n":15,"deviance":  2.4000000,"yval":0.80000000,"type":"leaf"}]},{"label":"Fare>=10.5","n":17,"deviance":  0.9411765,"yval":0.94117650,"type":"leaf"}]}]},{"label":"Fare>=25.5","n":21,"deviance":  2.5714290,"yval":0.85714290,"type":"leaf"}]}]},{"label":"Age< 5.5","n":20,"deviance":  3.2000000,"yval":0.80000000,"type":"leaf"}]},{"label":"Age>=32.25","n":14,"deviance":  0.0000000,"yval":1.00000000,"type":"leaf"}]}]},{"label":"Fare>=47.5","n":89,"deviance":  4.7191010,"yval":0.94382020,"splitVar":"Fare","splitVal":" 70","type":"split","children": [{"label":"Fare< 70","n":25,"deviance":  2.6400000,"yval":0.88000000,"type":"leaf"},{"label":"Fare>=70","n":64,"deviance":  1.9375000,"yval":0.96875000,"splitVar":"Age","splitVal":" 25.5","type":"split","children": [{"label":"Age< 25.5","n":17,"deviance":  1.7647060,"yval":0.88235290,"type":"leaf"},{"label":"Age>=25.5","n":47,"deviance":  0.0000000,"yval":1.00000000,"type":"leaf"}]}]}]}]};      
+          dtree({ data: data, id: 'tree' });
+        } catch(e) {
+          var dms = document.getElementById('dms');
+          dms.innerHTML = e.toString();
+          dms.className = 'dms alert alert-error';
+        }
+      })(this);
+   </script>
+</html>

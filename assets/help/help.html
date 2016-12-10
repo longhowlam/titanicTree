@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>RevoTreeView Help</title>
+      <meta name="description" content="Decision Tree">
+      <meta name="author" content="Microsoft Corporation">
+      <meta http-equiv="X-UA-Compatible" content="IE=10">
+      <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <style> 
+         body {
+            padding-top: 60px;
+			font-size: 13px;
+         }
+         table {
+            font-size: 13px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="navbar navbar-fixed-top">
+         <div class="navbar-inner">
+            <div class="container-fluid">
+               <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               </button>
+               <a class="brand" href="#">RevoTreeView</a>              
+               <!--/.nav-collapse -->
+            </div>
+         </div>
+      </div>
+      <div class="container-fluid">
+         <div class="row-fluid">
+            <div class="page-header">
+               <div class="muted pull-right">
+                  RevoTreeView v7.0
+               </div>
+               <h3>Exploring Your Decision Tree</h3>
+            </div>
+         </div>
+         <div class="row-fluid">
+            <div>
+               <p>
+                  You can click on split nodes, which are represented by a circular node shape, to expand or collapse 
+                  the tree branch. If the ‘Use node color to identify variables’ option is turned on, the color of a split node 
+                  represents the variable that split to create its child nodes.
+               </p>
+               <p>
+                  To explore and expand the tree, try these keyboard/mouse combo actions on a split node:
+               </p>
+               <ul>
+                  <li><b>Click</b>. Expands the node to the last view of that branch or to at least the node’s children. Clicking an expanded node once would collapse the branch to this node. Immediately clicking the node again would expand the branch to the level it was before it had just been collapsed.</li>
+                  <li><b>CTRL + Click</b>. Displays only the children of the selected node.</li>
+                  <li><b>ALT + Click</b>. Displays all nodes below the selected node.</li>
+               </ul>
+               <br>
+               <h4>Getting More Information About Nodes</h4>
+               <p>
+                  To get additional information, hover over the node to expose a tooltip with details such as the node name, the next split variable, and its value. Additionally, the tooltip displays:  
+               </p>
+               <ul>
+                  <li>
+                     <strong>For classification trees:</strong> the n, loss, predicted values, and a simple bar chart.
+                  </li>
+                  <li>
+                     <strong>For regression trees:</strong> the n, deviance, and predicted values.
+                  </li>
+               </ul>
+			   <br>
+               <p>
+                  If you turn on the option to 'Show prediction path', the act of hovering over or clicking  a node will display the prediction path from the root node to the selected node in a panel on the right. The end of the path displays the prediction value for the selected node.
+               </p>
+               <br>
+               <p>
+				  If a node splits on a categorical variable, then the node's label will be blank. This signals that the node was split among multiple categories. You can see which categories by hovering over each child node to reveal the category name and other details.  
+               </p>
+               <br>
+               <div>
+                  <strong><i>Note:</i></strong> The square-shaped nodes, called leaf or terminal nodes, cannot be expanded.
+               </div>
+               <br>
+               <p>
+               <h4>Line Thickness Between Nodes</h4>
+               The thickness of the line connecting two nodes is representative of the number of observations going into the child node.
+               </p>
+               <br>
+               <h4>Tree Display Options</h4>
+               <p>
+                  Open the <strong>Options</strong> toolbar menu to see and/or change the tree’s display options. The following display options are available:
+               </p>
+               <table class="table">
+                  <thead>
+                     <tr>
+                        <th><i>Display&nbsp;Menu&nbsp;Options</i></th>
+                        <th><i>Description</i></th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td><b>Show variability using border thickness</b></td>
+                        <td>
+                           <p>
+                              Turn on or off the representation of variability by the node border thickness. If turned off, all borders are the same size. If turned on, the thickness of the border represents the degree of variability.
+                           </p>
+                           <ul>
+                              <li>
+                                 <strong>For classification trees:</strong> the variability is the loss value.
+                              </li>
+                              <li>
+                                 <strong>For regression trees:</strong> the variability is the deviance.
+                              </li>
+                           </ul>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><b>Show split and predicted values on node labels</b></td>
+                        <td>
+                           <p>
+                              Show or hide values in the node’s label. For split nodes, it is the split value. For terminal/leaf nodes, it is the predicted value. If turned off, hover over the node to view these values.
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><b>Truncate Labels</b></td>
+                        <td>
+                           <p>                
+                              If you turn on the ‘Show split and predicted values on node labels’ option, you can choose to also truncate the label to a specific number of characters.
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><b>Use node color to identify variables</b></td>
+                        <td>
+                           <p>
+                              Turn on or off the use of a unique color for each variable. Use the legend to see the mapping of the colors to the variables. If turned off, nodes are colorless. If turned on, the color represents:
+                           </p>
+                           <ul>
+                              <li>
+                                 For split nodes: the variable that split to create the child nodes
+                              </li>
+                              <li>
+                                 For terminal nodes: the prediction value as categories for classification trees and the mean for regression trees
+                              </li>
+                           </ul>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><b>Display legend area</b></td>
+                        <td>
+                           <p>
+                              Show or hide the legend or prediction path panel to the right of the tree. 
+                           </p>
+	                      <ul>
+                              <li>
+                                 <b>Show color legend</b>: If you have turned on the "User node color..." option, then this legend option displays a list of the variables in the tree and the color associated to each variable. This information allows the data for each variable to be identified in the tree.
+                              </li>
+                              <li>
+                                 <b>Show prediction path</b>: This option displays the prediction path from the root node down to the node you clicked or hovered over. The end of the path displays the prediction value for the selected node.
+                              </li>
+                           </ul>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <br>
+               <h4>Understanding the Tree Legend</h4>
+               <p>
+                  The legend displays a map of the variables appearing in the decision tree and their associated color. The legend is only available when the ‘Use node color to identify variables’ option is turned on. This information allows the data for each variable to be identified in the tree.
+               </p>
+               <ul>
+                  <li>
+                     <strong>For classification trees:</strong> Click the +/- besides the colored square to expand/collapse the categories represented by each shade.
+                  </li>
+                  <li>
+                     <strong>For regression trees:</strong> Click the +/- besides the colored square to expand/collapse the continuous color scale.  
+                  </li>
+               </ul>
+               <p>
+                  The color of the split variables appear in circle-shaped swatches.  
+                  These colors are used to color the corresponding split nodes in the tree.
+               </p>
+            </div>
+            <!--<div class="span3">
+               <div class="well lsidebar-nav">
+                  <ul class="nav nav-list">
+                     <li class="nav-header">TABLE OF CONTENTS</li>
+                     <li><a href="#">Link</a></li>
+                     <li><a href="#">Link</a></li>
+                     <li><a href="#">Link</a></li>
+                  </ul>
+               </div>
+               </div>-->
+         </div>
+         <hr>
+         <footer>
+            <p>&copy; Microsoft Corporation 2015</p>
+         </footer>
+      </div>
+   </body>
+</html>
